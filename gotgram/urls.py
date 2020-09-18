@@ -8,5 +8,5 @@ from posts import views as posts_views
 urlpatterns = [
     path("hello/",local_views.hello),
 
-    path("posts/",posts_views.list_posts)
+    path("posts/",posts_views.list_posts),
 ]
