@@ -8,5 +8,7 @@ from posts import views as posts_views
 urlpatterns = [
     path("hello/",local_views.hello),
 
+    path('admin/', admin.site.urls),
+
     path("posts/",posts_views.list_posts),
 ]
