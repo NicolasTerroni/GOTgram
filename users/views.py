@@ -30,28 +30,39 @@ def login_view(request):
 
 def signup_view(request):
     """Sign up view."""
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["passwd"]
-        password_confirmation = request.POST["passwd_confirmation"]
+    if request.method == 'POST':
 
-        if password != password_confirmation:
-            return render(request, "users/signup.html", {"error": "Password confirmation does not match."})
-        
+        username = request.POST['username']
+        passwd = request.POST['passwd']
+        passwd_confirmation = request.POST['passwd_confirmation']
+        email = request.POST['email']
+
+        # PASSWORD VALIDATION
+        if passwd != passwd_confirmation:
+            return render(request, 'users/signup.html', {'error': 'Password confirmation does not match.'})
+            
+        # EMAIL VALIDATION
+        u_email = User.objects.filter(email=email)
+        if u_email:
+            return render(request, 'users/signup.html', {'error': "Email already exists."})
+
         try:
-            user = User.objects.create(username=username, password=password)
+            user = User.objects.create_user(username=username, password=passwd)
         except IntegrityError:
-            return render(request, "users/signup.html", {"error": "Username already exists."})
-        user.first_name = request.POST('first_name')
-        user.last_name = request.POST('last_name')
-        user.email = request.POST('email')
+            return render(request, 'users/signup.html', {'error': 'Username is already exists.'})
+
+        user.first_name = request.POST['first_name']
+        user.last_name = request.POST['last_name']
+        user.email = request.POST['email']
+
         user.save()
 
         profile = Profile(user=user)
         profile.save()
 
-        return redirect("login")
-    return render(request, "users/signup.html")
+        return redirect('login')
+
+    return render(request, 'users/signup.html')
     
 
 
