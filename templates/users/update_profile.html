@@ -1,9 +1,58 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block head_content %}
 <title>@{{ request.user.username }} | Update profile</title>
 {% endblock %}
 
 {% block container %}
-    <h1 class="mt-5">@{{ request.user.username }}</h1>
+
+<div class="container">
+
+    <div class="row justify-content-md-center">
+        <div class="col-6 p-4" id="profile-box">
+
+            <form action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <p>{{ form.errors }}</p>
+                {% endif %}
+
+                {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                        <li  {% if message.tags %} class="alert alert-success {{ message.tags }} " {% endif %}> {{ message }} </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="media">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" class="rounded-circle" height="50" />
+                    {% else%}
+                        <img src="{% static 'img/default-profile.png' %}" class="rounded-circle" height="50" />
+                    {% endif %}
+
+                    <div class="media-body">
+                        <h5 class="ml-4">@{{ user.username }} | {{ user.get_full_name }}</h5>
+                        <p class="ml-4"><input type="file" name="profile_picture" required="true"></p>
+                    </div>
+                </div>
+
+                <hr><br>
+
+
+                <div class="form-group">
+                    <label>Biography</label>
+                    <textarea class="form-control" name="biography">{{ profile.biography }}</textarea>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary btn-block mt-5">Update profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
