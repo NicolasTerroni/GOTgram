@@ -15,10 +15,6 @@
             <form action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                {% if form.errors %}
-                    <p>{{ form.errors }}</p>
-                {% endif %}
-
                 {% if messages %}
                     <ul class="messages list-unstyled">
                         {% for message in messages %}
@@ -36,16 +32,33 @@
 
                     <div class="media-body">
                         <h5 class="ml-4">@{{ user.username }} | {{ user.get_full_name }}</h5>
-                        <p class="ml-4"><input type="file" name="profile_picture" required="true"></p>
+                        <p class="ml-4"><input type="file" name="profile_picture" ></p>
                     </div>
                 </div>
+
+                {% for error in form.profile_picture.errors %}
+                   <div class="alert alert-danger">
+                       <b>Picture: </b>{{error}}
+                    </div> 
+                {% endfor %}
 
                 <hr><br>
 
 
                 <div class="form-group">
                     <label>Biography</label>
-                    <textarea class="form-control" name="biography">{{ profile.biography }}</textarea>
+
+                    <textarea 
+                        class="form-control {% if form.biography.errors %}is-invalid{%endif%}"
+                        name="biography">{%if form.errors%}{{ form.biography.value }}{%else%}{{ profile.biography }}{%endif%}
+                    </textarea>
+
+                    <div class="invalid-feedback">
+                        {% for error in form.biography.errors  %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>       
+                </div>
                 </div>
 
 
