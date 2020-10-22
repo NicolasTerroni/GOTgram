@@ -15,7 +15,7 @@ from users.models import Profile
 #Forms
 from users.forms import ProfileForm
 
-
+@login_required
 def update_profile(request):
     """Update a user's profile view."""
     profile = request.user.profile
@@ -27,16 +27,13 @@ def update_profile(request):
 
             profile.profile_picture = data['profile_picture']
             profile.biography = data['biography']
-
             profile.save()
 
             messages.success(request, 'Your profile has been updated!')
 
             return redirect('update_profile')
-
     else:
         form = ProfileForm()
-
     return render(
         request=request,
         template_name='users/update_profile.html',
@@ -80,7 +77,6 @@ def signup_view(request):
         u_email = User.objects.filter(email=email)
         if u_email:
             return render(request, 'users/signup.html', {'error': "Email already exists."})
-
         try:
             user = User.objects.create_user(username=username, password=passwd)
         except IntegrityError:
@@ -89,7 +85,6 @@ def signup_view(request):
         user.first_name = request.POST['first_name']
         user.last_name = request.POST['last_name']
         user.email = request.POST['email']
-
         user.save()
 
         profile = Profile(user=user)
