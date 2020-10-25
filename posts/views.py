@@ -7,42 +7,18 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+# Models
+from posts.models import Post
+
 # Forms
 from posts.forms import PostForm
 
-posts = [
-    {
-        'title': 'Training day',
-        'user': {
-            'name': 'jon.snow',
-            'picture': 'https://i.ibb.co/WB58sgN/jon-profile.jpg'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://i.ibb.co/wC7fV4Q/jon-training.jpg',
-    },
-    {
-        'title': 'Old friend',
-        'user': {
-            'name': 'arya',
-            'picture': 'https://i.ibb.co/nrhYxwy/arya-profile.jpg'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://i.ibb.co/b7pJWCX/arya-hound.jpg',
-    },
-    {
-        'title': '#TBT',
-        'user': {
-            'name': 'jlannister',
-            'picture': 'https://i.ibb.co/D7sQT2g/jamie-profile.png'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://i.ibb.co/3dhYWgS/jaime-throne.jpg',
-    }
-]
 
 @login_required
 def list_posts(request):
     """List existing posts."""
+
+    posts = Post.objects.all().order_by("-created")
     return render(request, "posts/feed.html", {"posts": posts})
 
 
