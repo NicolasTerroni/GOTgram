@@ -13,6 +13,7 @@ from django.contrib import messages
 from users.forms import ProfileForm, SignupForm
 
 
+
 @login_required
 def update_profile(request):
     """Update a user's profile view."""
