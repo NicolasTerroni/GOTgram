@@ -2,18 +2,23 @@
 
 # Python
 import pdb
+
 # Django
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
 # Exceptions
 from django.db.utils import IntegrityError
+
 # Models
 from django.contrib.auth.models import User
 from users.models import Profile
+
 #Forms
 from users.forms import ProfileForm
+
 
 @login_required
 def update_profile(request):
