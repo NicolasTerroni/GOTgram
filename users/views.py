@@ -2,18 +2,16 @@
 
 # Python
 import pdb
+
 # Django
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
-# Exceptions
-from django.db.utils import IntegrityError
-# Models
-from django.contrib.auth.models import User
-from users.models import Profile
+
 #Forms
-from users.forms import ProfileForm
+from users.forms import ProfileForm, SignupForm
+
 
 @login_required
 def update_profile(request):
@@ -62,37 +60,20 @@ def login_view(request):
 
 def signup_view(request):
     """Sign up view."""
-    if request.method == 'POST':
+    if request.method == "POST":
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+    else:
+        form = SignupForm()
+    
+    return render(
+        request=request,
+        template_name="users/signup.html",
+        context={"form":form}
+    )
 
-        username = request.POST['username']
-        passwd = request.POST['passwd']
-        passwd_confirmation = request.POST['passwd_confirmation']
-        email = request.POST['email']
-
-        # PASSWORD VALIDATION
-        if passwd != passwd_confirmation:
-            return render(request, 'users/signup.html', {'error': 'Password confirmation does not match.'})
-            
-        # EMAIL VALIDATION
-        u_email = User.objects.filter(email=email)
-        if u_email:
-            return render(request, 'users/signup.html', {'error': "Email already exists."})
-        try:
-            user = User.objects.create_user(username=username, password=passwd)
-        except IntegrityError:
-            return render(request, 'users/signup.html', {'error': 'Username is already exists.'})
-
-        user.first_name = request.POST['first_name']
-        user.last_name = request.POST['last_name']
-        user.email = request.POST['email']
-        user.save()
-
-        profile = Profile(user=user)
-        profile.save()
-
-        return redirect('login')
-
-    return render(request, 'users/signup.html')
     
 
 @login_required
