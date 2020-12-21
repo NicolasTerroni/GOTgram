@@ -23,7 +23,7 @@ urlpatterns = [
 
     path(
         route = "signup/", 
-        view = views.signup_view, 
+        view = views.SignUpView.as_view(), 
         name = "signup"
     ),
 
