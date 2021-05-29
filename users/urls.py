@@ -29,7 +29,7 @@ urlpatterns = [
 
     path(
         route = "me/profile/", 
-        view = views.UodateProfileView.as_view(), 
+        view = views.UpdateProfileView.as_view(), 
         name = "update_profile"
     ),
     

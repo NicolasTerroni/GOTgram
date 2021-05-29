@@ -52,7 +52,7 @@ class SignUpView(FormView):
         return super().form_valid(form)
 
 
-class UodateProfileView(LoginRequiredMixin, UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
     """Updates a user's profile view."""
     
     template_name = 'users/update_profile.html'
